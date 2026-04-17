@@ -24,10 +24,13 @@ jobs:
             context: .
             dockerfile: ./Dockerfile
             image: frontend
+            build_args: |
+              VITE_API_BASE_URL=http://localhost:3001
           - name: backend
             context: ./backend
             dockerfile: ./backend/Dockerfile
             image: backend
+            build_args: ""
 
     steps:
       - name: Checkout repository
@@ -70,6 +73,7 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          build-args: ${{ matrix.build_args }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
